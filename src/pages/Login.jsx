@@ -14,12 +14,18 @@ export default function Login() {
       setError("");
 
       const res = await api.post("/login", { email, password });
-      localStorage.setItem("token", res.data.token);
 
-      // redirect contoh
-      window.location.href = "/dashboard";
+      // Simpan token
+      localStorage.setItem("token", res.data.data.token);
+
+      // redirect sesuai role
+      const redirectUrl = res.data.data.redirect_url || "/home";
+      window.location.href = redirectUrl;
+
     } catch (err) {
-      setError("Email atau password salah");
+      // Ambil message dari backend jika ada
+      const msg = err.response?.data?.message || "Email atau password salah";
+      setError(msg);
     } finally {
       setLoading(false);
     }
@@ -43,7 +49,7 @@ export default function Login() {
             Login Akun
           </h2>
           <p className="text-slate-600 mt-2 text-sm">
-            Masuk untuk mengelola peminjaman buku
+            Masuk aplikasi peminjaman buku
           </p>
         </div>
 
@@ -63,6 +69,7 @@ export default function Login() {
             <input
               type="email"
               placeholder="email@example.com"
+              value={email}
               onChange={e => setEmail(e.target.value)}
               className="w-full px-4 py-3 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-500"
             />
@@ -75,6 +82,7 @@ export default function Login() {
             <input
               type="password"
               placeholder="••••••••"
+              value={password}
               onChange={e => setPassword(e.target.value)}
               className="w-full px-4 py-3 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-500"
             />

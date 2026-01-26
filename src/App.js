@@ -6,9 +6,11 @@ import Register from "./pages/Register";
 
 import Dashboard from "./pages/admin/Dashboard";
 import Books from "./pages/admin/Books";
+import Home from "./pages/user/Home";
 
 import ProtectedRoute from "./routers/ProtectedRoute";
-import MainLayout from "./layouts/MainLayout";
+import MainLayout from "./layouts/MainLayout";   // layout ADMIN
+import UserLayout from "./layouts/UserLayout";   // layout USER
 
 function App() {
   return (
@@ -19,16 +21,27 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
 
-        {/* Protected + Layout */}
+        {/* Admin routes */}
         <Route
           element={
-            <ProtectedRoute>
+            <ProtectedRoute role="admin">
               <MainLayout />
             </ProtectedRoute>
           }
         >
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/books" element={<Books />} />
+        </Route>
+
+        {/* User routes */}
+        <Route
+          element={
+            <ProtectedRoute role="user">
+              <UserLayout />
+            </ProtectedRoute>
+          }
+        >
+          <Route path="/home" element={<Home />} />
         </Route>
       </Routes>
     </BrowserRouter>

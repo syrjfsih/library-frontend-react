@@ -9,6 +9,7 @@ export default function Register() {
     name: "",
     email: "",
     password: "",
+    password_confirmation: "",
   });
 
   const [loading, setLoading] = useState(false);
@@ -24,6 +25,12 @@ export default function Register() {
     }
     if (form.password.length < 8) {
       return "Password minimal 8 karakter";
+    }
+    if (!form.password_confirmation) {
+      return "Konfirmasi password wajib diisi";
+    }
+    if (form.password !== form.password_confirmation) {
+      return "Password dan konfirmasi password tidak sama";
     }
     return "";
   };
@@ -44,13 +51,10 @@ export default function Register() {
 
       setSuccess("Registrasi berhasil, mengarahkan ke halaman login...");
 
-      // redirect ke login setelah 1.5 detik
       setTimeout(() => {
         navigate("/login");
       }, 1500);
-
     } catch (err) {
-      // jika backend kirim pesan error
       if (err.response?.data?.message) {
         setError(err.response.data.message);
       } else {
@@ -63,8 +67,6 @@ export default function Register() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-100 via-blue-100 to-indigo-200">
-      
-      {/* Card */}
       <div className="bg-white/80 backdrop-blur-xl border border-white shadow-2xl rounded-3xl p-10 max-w-md w-full text-slate-800">
         
         {/* Header */}
@@ -104,10 +106,12 @@ export default function Register() {
             </label>
             <input
               type="text"
-              placeholder="Nama lengkap"
+              placeholder="Nama Lengkap"
               value={form.name}
-              onChange={e => setForm({ ...form, name: e.target.value })}
-              className="w-full px-4 py-3 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              onChange={(e) =>
+                setForm({ ...form, name: e.target.value })
+              }
+              className="w-full px-4 py-3 rounded-xl border border-slate-300 focus:ring-2 focus:ring-indigo-500"
             />
           </div>
 
@@ -119,8 +123,10 @@ export default function Register() {
               type="email"
               placeholder="email@example.com"
               value={form.email}
-              onChange={e => setForm({ ...form, email: e.target.value })}
-              className="w-full px-4 py-3 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              onChange={(e) =>
+                setForm({ ...form, email: e.target.value })
+              }
+              className="w-full px-4 py-3 rounded-xl border border-slate-300 focus:ring-2 focus:ring-indigo-500"
             />
           </div>
 
@@ -130,14 +136,31 @@ export default function Register() {
             </label>
             <input
               type="password"
-              placeholder="Minimal 8 karakter"
+              placeholder="••••••••"
               value={form.password}
-              onChange={e => setForm({ ...form, password: e.target.value })}
-              className="w-full px-4 py-3 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              onChange={(e) =>
+                setForm({ ...form, password: e.target.value })
+              }
+              className="w-full px-4 py-3 rounded-xl border border-slate-300 focus:ring-2 focus:ring-indigo-500"
             />
-            <p className="text-xs text-slate-500 mt-1">
-              Password minimal 8 karakter
-            </p>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium mb-1">
+              Konfirmasi Password
+            </label>
+            <input
+              type="password"
+              placeholder="••••••••"
+              value={form.password_confirmation}
+              onChange={(e) =>
+                setForm({
+                  ...form,
+                  password_confirmation: e.target.value,
+                })
+              }
+              className="w-full px-4 py-3 rounded-xl border border-slate-300 focus:ring-2 focus:ring-indigo-500"
+            />
           </div>
         </div>
 
@@ -145,9 +168,9 @@ export default function Register() {
         <button
           onClick={submit}
           disabled={loading}
-          className="w-full mt-6 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-semibold transition-all duration-300 shadow-lg disabled:opacity-50"
+          className="w-full mt-6 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-semibold transition disabled:opacity-50"
         >
-          {loading ? "Mendaftarkan..." : "Register"}
+          {loading ? "Mendaftarkan..." : "Daftar"}
         </button>
 
         {/* Footer */}
@@ -157,7 +180,7 @@ export default function Register() {
             to="/login"
             className="text-indigo-600 font-semibold hover:underline"
           >
-            Login
+            Masuk
           </Link>
         </p>
       </div>
